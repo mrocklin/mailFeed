@@ -1,0 +1,22 @@
+MailFeed
+========
+
+A simple script to easily pull incoming e-mails from a webserver.
+
+E-mail is a strikingly complex protocol. Managing e-mail logins, servers, and representations takes a surprisingly large amount of work. The attached code is intended to abstract this clutter into a nice Pythonic iterator
+
+Example: 
+>>> from mailFeed import mailFeed
+>>> inbox = mailFeed(username='sam', password='123', host='imap.gmail.com')
+
+>>> for mail in inbox:
+...     print mail
+
+
+This code runs forever. inbox is a generator or infinite list. It will keep waiting for more e-mails to arrive so that it can process them. 
+
+
+Installation
+------------
+
+This is a simple pure python script. No installation is required.
