@@ -69,9 +69,8 @@ def dataFeed(waittime=60, **kwargs):
         # Compute sleep time
         timeSinceLastCheck = time() - lastCheckTime
         sleepTime = waittime - timeSinceLastCheck
-        if sleeptime <= 0:
-            sleeptime = 0
-        sleep(sleepTime)
+        if sleepTime > 0:
+            sleep(sleepTime)
 
 def getEmailsFromServer(mbox):
     '''Fetch and return all new email from an mbox server
