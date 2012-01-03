@@ -4,7 +4,6 @@ from time import sleep, time
 
 __all__ = ('dataFeed', 'mailFeed', 'attachmentsFeed', 'login')
 
-
 def stdLog(x):
     print(x)
 def errLog(x):
@@ -16,7 +15,8 @@ default_host = 'imap.gmail.com'
 
 def login(username = default_username, password = default_password,
         host = default_host, inbox="INBOX"):
-    '''Connects to IMAP server and enters inbox
+    """
+    Connects to IMAP server and enters inbox
     Inputs:
         username : "joe.schmoe"
         password : "password1234"
@@ -24,7 +24,8 @@ def login(username = default_username, password = default_password,
 
     Outputs:
         an mbox object imaplib.IMAP4_SSL(imap.gmail.com)
-        '''
+        """
+
     stdLog('Logging into %s under username %s\n\n'%(host,username))
     mbox = imaplib.IMAP4_SSL(host)
     mbox.login(username, password)
@@ -33,14 +34,17 @@ def login(username = default_username, password = default_password,
     return mbox
 
 def clearMessage(mbox, emailid):
-    '''Deletes message from imap server. Moves to "DownloadedMails" folder
+    """
+    Deletes message from imap server. Moves to "DownloadedMails" folder
     mbox - a mailbox or server returned from login or IMAP4_SSL object
-    emailid - id (number or numeric string) of email to delete'''
+    emailid - id (number or numeric string) of email to delete
+    """
     mbox.copy(emailid, 'DownloadedMails')
     mbox.store(emailid, "+FLAGS.SILENT", '(\\Deleted)')
 
 def dataFeed(waittime=60, **kwargs):
-    """ Generates a feed of raw email data from a mail server.
+    """
+    Generates a feed of raw email data from a mail server.
     See login function for keyword arguments to specify server
     Creates a generator/infinite list
 
@@ -56,7 +60,7 @@ def dataFeed(waittime=60, **kwargs):
     mbox = login(**kwargs)
 
     lastCheckTime = time()
-    while(1):
+    while(1): # Do forever
         try:
             newEmails = getEmailsFromServer(mbox)
             lastCheckTime = time()
@@ -73,8 +77,10 @@ def dataFeed(waittime=60, **kwargs):
             sleep(sleepTime)
 
 def getEmailsFromServer(mbox):
-    '''Fetch and return all new email from an mbox server
-    Returns raw e-mail data. Parse using mailFromData function'''
+    """
+    Fetch and return all new email from an mbox server
+    Returns raw e-mail data. Parse using mailFromData function
+    """
 
     mbox.select('INBOX')
 
@@ -95,19 +101,19 @@ def getEmailsFromServer(mbox):
     return dataPackets
 
 def mailFeed(*args, **kwargs):
-    """ See runs mailFromData on dataFeed stream
+    """
+    See runs mailFromData on dataFeed stream
 
     See Also:
         dataFeed
-        """
+    """
     return (mailFromData(data) for data in dataFeed(*args, **kwargs))
 
 def attachmentsFeed(*args, **kwargs):
-    """ See runs getAttachments on mailFeed stream
+    """
+    See runs getAttachments on mailFeed stream
 
     See Also:
         dataFeed
-        """
+    """
     return (getAttachments(mail) for mail in mailFeed(*args, **kwargs))
-
-
